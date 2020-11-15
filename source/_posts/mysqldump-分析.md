@@ -348,4 +348,4 @@ static int dump_selected_tables(char *db, char **table_names, int tables)
 
 当有了隔离级别以后，可以比较准确的获取数据信息，轻松拿到待同步的增量位点，而 binlog 也是可以反向解析成 SQL 的。因此，虽然 mysqldump 已经老的提不动刀，无法继续冲杀在一线生产环境。但是，他依然为很多异构数据库提供了同步 MySQL 数据的思路和方法。
 
-比如，16年开源的迅速在中国成为时下最火爆的 AP 数据库 [ClickHouse](https://clickhouse.yandex/docs/)，他实现了 [MaterializeMySQL 引擎](MaterializeMySQL 引擎)，可以实现对 MySQL 5.7 和 MySQL 8.0 的全量 + 增量同步。目前这个功能的使用者和体验者还不是很多，但是预估在不久的未来，会成为一个企业级可用的功能。
+比如，16年开源的迅速在中国成为时下最火爆的 AP 数据库 [ClickHouse](https://clickhouse.yandex/docs/)，他实现了 [MaterializeMySQL 引擎](https://bohutang.me/3030/12/12/clickhouse-and-friends-mysql-replication-materializemysql/#7-%E7%9B%B8%E5%85%B3%E5%8D%9A%E6%96%87)，可以实现对 MySQL 5.7 和 MySQL 8.0 的全量 + 增量同步。目前这个功能的使用者和体验者还不是很多，但是预估在不久的未来，会成为一个企业级可用的功能。
