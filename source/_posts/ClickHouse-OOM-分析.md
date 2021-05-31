@@ -31,7 +31,7 @@ OOM 是什么我们已经知道了，那么，ClickHouse OOM 的原因其实应�
 
 ### 2.1. 查询导致OOM
 
-比如某个大数据量的表做聚合排序（ `GROUP BY` 和 `ORDER BY`）操作，导致需要将大量的数据读取到内存中，然后按照 SQL 要求进行分组和排序。数据对内存的消耗基本是 数据:内存> 1:1 的。也就是，如果又 1GB 数据需要做聚合排序操作，那么他需要的内存是要超过 1GB 的。数据量越大，所需内存会更加巨大。常见的机器是无法满足这种需求的。
+比如某个大数据量的表做聚合排序（ `GROUP BY` 和 `ORDER BY`）操作，导致需要将大量的数据读取到内存中，然后按照 SQL 要求进行分组和排序。数据对内存的消耗基本是 数据:内存> 1:1 的。也就是，如果有 1GB 数据需要做聚合排序操作，那么他需要的内存是要超过 1GB 的。数据量越大，所需内存会更加巨大。常见的机器是无法满足这种需求的。
 
 
 ### 2.2. 写入导致OOM
@@ -40,7 +40,7 @@ OOM 是什么我们已经知道了，那么，ClickHouse OOM 的原因其实应�
 
 可能看到这里会觉得 ClickHouse 一定设计的不合理，要不然为什么如此小的数据写入都会引发 OOM 呢？
 
-如果会有这样的问题，说明不是很 ClickHouse 。ClickHouse 支持多种表引擎。其中有一个 MergeTree 族群表引擎，MergeTree 在 ClickHouse 的地位基本等同于 Innodb 在 MySQL 的地位。MergeTree 引擎是基于 LSM 算法实现的。每次写入就会生成一个小文件，然后 ClickHouse Server 再去合并每个小文件到数据文件中。关于 MergeTree 原理将会在后面的文章中进行详细介绍。
+如果会有这样的问题，说明不是很了解 ClickHouse 。ClickHouse 支持多种表引擎。其中有一个 MergeTree 族群表引擎，MergeTree 在 ClickHouse 的地位基本等同于 Innodb 在 MySQL 的地位。MergeTree 引擎是基于 LSM 算法实现的。每次写入就会生成一个小文件，然后 ClickHouse Server 再去合并每个小文件到数据文件中。关于 MergeTree 原理将会在后面的文章中进行详细介绍。
 
 理解了MergeTree的 merge 工作后，就比较清晰了。当多个线程每次只写入一行数据时， insert query 的每个列会生成两个文件。因此，按照上面的写入方式，计算出消耗的内存为：
 
