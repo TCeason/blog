@@ -1,8 +1,9 @@
 ---
 layout: title
 title: 什么是 HashTable
-date: 2021-06-21 15:45:03
-tags:
+date: 2021-06-21 18:45:03
+categories: DataStructures
+tags: HashTable
 ---
 
 HashTable 是一种存储 key-value pairs（键值对）的数据结构。
@@ -55,3 +56,86 @@ HashTable 将会是一个链表数组。map 到同一 index 的所有 key 都将
 
 可以增加 HashTable 的大小，以便将 Hash 条目分割的更远。Threshold value（临界点）表示在调整大小之前需要占用的 HashTable 的百分比。HashTable threshold value 为 0.6 表示当 HashTable 空间使用率为 60 % 时进行一次扩容。按照惯例，HashTable 的大小扩容至二倍。这是内存密集型的。
 
+## Implementation
+
+基于 chaining 实现。
+
+```cpp
+#include <iostream>
+#include <list>
+
+using namespace std;
+
+class HashTable {
+private:
+    list<int> * table;
+    int total_elements;
+
+    int getHash(int key)
+    {
+        return key % total_elements;
+    }
+
+public:
+    HashTable(int n)
+    {
+        total_elements = n;
+        table = new list<int>[total_elements];
+    }
+
+    void insertElement(int key)
+    {
+        table[getHash(key)].push_back(key);
+    }
+
+    void removeElement(int key)
+    {
+        int x = getHash(key);
+        list<int>::iterator i;
+
+        for (i = table[x].begin(); i != table[x].end(); i++)
+        {
+            if (*i == key)
+                break;
+        }
+
+        if (i != table[x].end())
+            table[x].erase(i);
+    }
+
+    void printAll()
+    {
+        // Traverse each index.
+        for (int i = 0; i < total_elements; i++)
+        {
+            cout << "Index " << i << ": ";
+            // Traverse the list at current index.
+            for (int j : table[i])
+                cout << j << "=>";
+
+            cout << endl;
+        }
+    }
+};
+
+int main() {
+    HashTable ht(3);
+
+    int arr[] = {2, 4, 6, 8, 10};
+
+    for (int i = 0; i < 5; i++)
+        ht.insertElement(arr[i]);
+
+    cout << "=== Hash Table ===" << endl;
+    ht.printAll();
+
+    ht.removeElement(4);
+    cout << endl << "=== After delete element 4 ===" << endl;
+    ht.printAll();
+
+    return 0;
+}
+
+```
+
+Transate to https://www.educative.io/edpresso/how-to-implement-a-hash-table-in-cpp
